@@ -1,0 +1,34 @@
+Mono path[0] = 'D:/Project/Unity/TTToe/TTToe_Data/Managed'
+Mono path[1] = 'D:/Project/Unity/TTToe/TTToe_Data/Mono'
+Mono config path = 'D:/Project/Unity/TTToe/TTToe_Data/Mono/etc'
+PlayerConnection initialized from D:/Project/Unity/TTToe/TTToe_Data (debug = 0)
+PlayerConnection initialized network socket : 0.0.0.0 55022
+Multi-casting "[IP] 192.168.100.2 [Port] 55022 [Flags] 2 [Guid] 2873442057 [EditorId] 2309688159 [Version] 1048832 [Id] WindowsPlayer(DESKTOP-6VVDRM0) [Debug] 0" to [225.0.0.222:54997]...
+PlayerConnection already initialized - listening to [192.168.100.2:55022]
+Initialize engine version: 5.3.4f1 (fdbb5133b820)
+GfxDevice: creating device client; threaded=1
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.0]
+    Renderer: NVIDIA GeForce GTX 950M (ID=0x139a)
+    Vendor:   NVIDIA
+    VRAM:     2018 MB
+Begin MonoManager ReloadAssembly
+Platform assembly: D:\Project\Unity\TTToe\TTToe_Data\Managed\UnityEngine.dll (this message is harmless)
+Loading D:\Project\Unity\TTToe\TTToe_Data\Managed\UnityEngine.dll into Unity Child Domain
+Platform assembly: D:\Project\Unity\TTToe\TTToe_Data\Managed\Assembly-CSharp.dll (this message is harmless)
+Loading D:\Project\Unity\TTToe\TTToe_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
+Platform assembly: D:\Project\Unity\TTToe\TTToe_Data\Managed\UnityEngine.UI.dll (this message is harmless)
+Loading D:\Project\Unity\TTToe\TTToe_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
+Platform assembly: D:\Project\Unity\TTToe\TTToe_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
+Loading D:\Project\Unity\TTToe\TTToe_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
+- Completed reload, in  0.065 seconds
+Platform assembly: D:\Project\Unity\TTToe\TTToe_Data\Managed\System.Core.dll (this message is harmless)
+Platform assembly: D:\Project\Unity\TTToe\TTToe_Data\Managed\System.dll (this message is harmless)
+desktop: 1920x1080 60Hz; virtual: 4108x1080 at 0,0
+<RI> Initializing input.
+<RI> Input initialized.
+<RI> Initialized touch support.
+UnloadTime: 0.632004 ms
+Setting up 2 worker threads for Enlighten.
+  Thread -> id: 1bb4 -> priority: 1 
+  Thread -> id: 34a8 -> priority: 1 
