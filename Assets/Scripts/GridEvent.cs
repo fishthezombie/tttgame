@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class SquareEvent : MonoBehaviour {
+public class GridEvent : MonoBehaviour {
 
     private bool activeBox;
 	// Use this for initialization
