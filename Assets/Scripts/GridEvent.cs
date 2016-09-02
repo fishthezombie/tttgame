@@ -3,20 +3,22 @@ using System.Collections;
 
 public class GridEvent : MonoBehaviour {
 
-    private bool activeBox;
-	// Use this for initialization
-	void Start () {
-        activeBox = false;
-	}
-	
-	// Update is called once per frame
-	public void setActiveBox()
-    {
-        activeBox = true;
+    string gridFill;
+    Vector2 gridCoor;
+    
+	public void setGridValue(string gridValue) {
+        gridFill = gridValue;
     }
 
-    public bool getActiveBox()
-    {
-        return activeBox;
+    public string getGridValue() {
+        return gridFill;
+    }
+
+    public void setGridCoor(Vector2 coor) {
+        gridCoor = coor;
+    }
+
+    public Vector2 getGridCoor() {
+        return gridCoor;
     }
 }
