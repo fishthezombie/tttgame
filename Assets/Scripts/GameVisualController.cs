@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class GameVisualController : MonoBehaviour {
 
     public GameObject gameEnvironment;
-    public RawImage winBackground;
+    public GameObject winBackground;
     public Text topTextMessage;
     public Text midTextMessage;
     public string firstMessage;
@@ -19,7 +19,7 @@ public class GameVisualController : MonoBehaviour {
         //Initialize game visual
         GameObject environment = Instantiate(gameEnvironment, this.transform.position, Quaternion.identity) as GameObject;
         environment.transform.SetParent(this.transform);
-        winBackground.enabled = false;
+        winBackground.SetActive(false);
         topTextMessage.text = firstMessage;
     }
 
@@ -39,7 +39,7 @@ public class GameVisualController : MonoBehaviour {
     }
 
     public void WinGameVisual (string winMessage) {
-        winBackground.enabled = true;
+        winBackground.SetActive(true);
         setMidTextMessage(winMessage);
     }
 
