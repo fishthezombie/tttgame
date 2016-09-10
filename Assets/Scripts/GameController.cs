@@ -5,17 +5,9 @@ using UnityEngine.UI;
 
 public class GameController : MonoBehaviour {
 
-    public GameObject gameEnvironment;
-    public Text topUIMessage;
-    public string firstMessage;
-    public RawImage victoryBGImage;
-    public Text victoryTextMessage;
-
-    public GameObject playerXPrefab;
-    public string playerXMark;
-    public GameObject playerOPrefab;
-    public string playerOMark;
-    public bool XGoesFirst;
+    public int xValue;
+    public int oValue;
+    public bool firstTurnIsX;
 
     public GameObject emptyGridPrefab;
     public float gridSize;
@@ -23,8 +15,10 @@ public class GameController : MonoBehaviour {
     public List<List<GameObject>> gridSquareList;
 
     GameObject emptyGridParent, playerOXParent;
+    GameVisualController gameVisual;
     bool gameEnd;
     int emptyGridCount;
+    bool xTurn;
 
     //Initialization
     void Start () {
@@ -35,12 +29,6 @@ public class GameController : MonoBehaviour {
         playerOXParent = new GameObject();
         playerOXParent.name = "Player OX Parent";
 
-        //Generate game interface
-        GameObject environment = Instantiate(gameEnvironment, this.transform.position, Quaternion.identity) as GameObject;
-        environment.transform.SetParent(this.transform);
-        topUIMessage.text = firstMessage;
-        victoryBGImage.enabled = false;
-
         //Generate grids
         gridSquareList = new List<List<GameObject>>();
         List<GameObject> tempGridList;
@@ -48,99 +36,104 @@ public class GameController : MonoBehaviour {
             tempGridList = new List<GameObject>();
             for (float j = 0; j < (gridSize * spaceBetweenGrids); j = j + spaceBetweenGrids) {
                 GameObject emptyGrid = Instantiate(emptyGridPrefab, new Vector3(i, j), Quaternion.identity) as GameObject;
-                emptyGrid.GetComponent<GridEvent>().setGridCoor(new Vector2(i, j)); // identify the grid as it's coordinate
                 tempGridList.Add(emptyGrid); //add one grid to one column
                 emptyGrid.transform.SetParent(emptyGridParent.transform); //group instantiated object to a parent
             }
             gridSquareList.Add(tempGridList); //add one column of grid to a row
         }
         emptyGridCount = (int)(gridSize * gridSize);
-	}
-	
-	// Update is called once per frame
-	void Update () {
+
+        //Other initialization
+        xTurn = firstTurnIsX;
+        gameVisual = gameObject.GetComponent<GameVisualController>();
+        gameEnd = false;
+    }
+
+    // Update is called once per frame
+    void Update () {
 
         // Left mouse button event
-	    if (Input.GetMouseButtonDown(0)) {
-            if (topUIMessage.text != "") topUIMessage.text = ""; //Remove game first message
-            if (XGoesFirst) { InsertPlayerOX(playerXPrefab, playerXMark); } // Instantiate X
-            else { InsertPlayerOX(playerOPrefab, playerOMark); }
+	    if (Input.GetMouseButtonDown(0) && !gameEnd) {
+            InsertPlayerOX();
         }
 	}
 
-    void InsertPlayerOX (GameObject playerOXPrefab, string playerValue) {
+    void InsertPlayerOX () {
 
         // Get grid's position and instantiate player OX object
         RaycastHit2D objectHit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
         if (objectHit.transform != null) {
-            if (objectHit.transform.GetComponent<GridEvent>().getGridValue() == null) {
-                objectHit.transform.GetComponent<GridEvent>().setGridValue(playerValue); // Fill empty grid
-                GameObject playerOX = Instantiate(playerOXPrefab, objectHit.transform.position, Quaternion.identity) as GameObject;
-                playerOX.transform.SetParent(playerOXParent.transform); // Group instantiated object to a parent
-                XGoesFirst = !XGoesFirst; //Switch the turn of the players
+
+            //Get scripts
+            GridEvent gridEvent = objectHit.transform.GetComponent<GridEvent>();
+
+            //Insert the sprite based on turn
+            if (gridEvent.getGridValue() == 0) {
+                gameVisual.InsertMark(objectHit.transform.gameObject, xTurn);
+                if (xTurn)
+                    gridEvent.setGridValue(xValue);
+                else
+                    gridEvent.setGridValue(oValue);
+                emptyGridCount--; //decrease empty grid count
+                xTurn = !xTurn; //Switch turn
             }
         }
 
-        if (!gameEnd) checkOtherOX();
+        if (!gameEnd) checkWinner();
     }
 
     //Temporary solution, bad code
-    void checkOtherOX () {
+    void checkWinner () {
         int rowValue, columnValue, diagonalUpValue, diagonalDownValue;
+        int xTotal = xValue * (int)gridSize,
+            oTotal = oValue * (int)gridSize;
 
-        // Check each column and row
+        // Check each column, row, and diagonals
         for (int x = 0; x < gridSquareList.Count; x++) {
             rowValue = 0;
             columnValue = 0;
             diagonalUpValue = 0;
             diagonalDownValue = 0;
-
             for (int y = 0; y < gridSquareList[x].Count; y++) {
-                string columnGridValue = gridSquareList[x][y].GetComponent<GridEvent>().getGridValue();
-                string rowGridValue = gridSquareList[y][x].GetComponent<GridEvent>().getGridValue();
-                string diagonalUpGridValue = gridSquareList[y][y].GetComponent<GridEvent>().getGridValue();
-                string diagonalDownGridValue = gridSquareList[y][gridSquareList[x].Count - 1 - y].GetComponent<GridEvent>().getGridValue();
+                columnValue = columnValue
+                    + gridSquareList[x][y].GetComponent<GridEvent>().getGridValue();
+                rowValue = rowValue
+                    + gridSquareList[y][x].GetComponent<GridEvent>().getGridValue();
+                diagonalUpValue = diagonalUpValue
+                    + gridSquareList[y][y].GetComponent<GridEvent>().getGridValue();
+                diagonalDownValue = diagonalDownValue
+                    + gridSquareList[y][gridSquareList[x].Count - 1 - y].GetComponent<GridEvent>().getGridValue();
+           }
 
-                //Increase row/column value if O found, reduce it if X found
-                if (columnGridValue == playerOMark) { columnValue++; }
-                else if (columnGridValue == playerXMark) { columnValue--; }
-                if (rowGridValue == playerOMark) { rowValue++; }
-                else if (rowGridValue == playerXMark) { rowValue--; }
-                if (diagonalUpGridValue == playerOMark) { diagonalUpValue++; }
-                else if (diagonalUpGridValue == playerXMark) { diagonalUpValue--; }
-                if (diagonalDownGridValue == playerOMark) { diagonalDownValue++; }
-                else if (diagonalDownGridValue == playerXMark) { diagonalDownValue--; }
-            }
+            // If one of the sequence is all filled, decide on the winner
+            if (columnValue == xTotal ||
+                rowValue == xTotal ||
+                diagonalUpValue == xTotal ||
+                diagonalDownValue == xTotal)
+                GameWinner(xTotal);
 
-            //Win when either O or X has filled a row/column
-            if (rowValue == (int)gridSize || 
-                columnValue == (int)gridSize || 
-                diagonalUpValue == (int)gridSize || 
-                diagonalDownValue == (int)gridSize) {
-                    VictoryConditionMet(playerOMark);
-            }
-            else if (rowValue == (int)-gridSize || 
-                columnValue == (int)-gridSize || 
-                diagonalUpValue == (int)-gridSize || 
-                diagonalDownValue == (int)-gridSize) {
-                    VictoryConditionMet(playerXMark);
-            }
-
-            //Otherwise tie
-            else if (emptyGridCount == 0) VictoryConditionMet("No One");
-
+            else if (columnValue == oTotal ||
+                rowValue == oTotal ||
+                diagonalUpValue == oTotal ||
+                diagonalDownValue == oTotal)
+                GameWinner(oTotal);
         }
-        emptyGridCount--; //decrease empty grid count
+        //Otherwise draw when there's no empty grid left
+        if (emptyGridCount == 0 && !gameEnd)
+            GameWinner(0);
+
     }
 
-    void VictoryConditionMet(string victoriousPlayer)
-    {
-        GameObject[] gridToDestroy = GameObject.FindGameObjectsWithTag("Grid");
-        foreach (GameObject grid in gridToDestroy) Destroy(grid);
+
+    void GameWinner(int oxValue) {
 
         //enable victory UI
-        victoryBGImage.enabled = true;
-        victoryTextMessage.text = victoriousPlayer + " Won!";
+        if (oxValue == (xValue * (int)gridSize))
+            gameVisual.WinGameVisual("X Won!");
+        else if (oxValue == (oValue * (int)gridSize))
+            gameVisual.WinGameVisual("O Won!");
+        else
+            gameVisual.WinGameVisual("It's a Draw!");
 
         //mark the game has ended
         gameEnd = true;

@@ -3,22 +3,17 @@ using System.Collections;
 
 public class GridEvent : MonoBehaviour {
 
-    string gridFill;
-    Vector2 gridCoor;
+    int gridValue;
     
-	public void setGridValue(string gridValue) {
-        gridFill = gridValue;
+    void Start() {
+        gridValue = 0;
     }
 
-    public string getGridValue() {
-        return gridFill;
+    public void setGridValue(int value) {
+        gridValue = value;
     }
 
-    public void setGridCoor(Vector2 coor) {
-        gridCoor = coor;
-    }
-
-    public Vector2 getGridCoor() {
-        return gridCoor;
+    public int getGridValue() {
+        return gridValue;
     }
 }
