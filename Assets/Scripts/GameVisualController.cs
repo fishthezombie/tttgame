@@ -21,6 +21,7 @@ public class GameVisualController : MonoBehaviour {
         environment.transform.SetParent(this.transform);
         winBackground.SetActive(false);
         topTextMessage.text = firstMessage;
+        midTextMessage.text = "";
     }
 
     void LateUpdate() {
@@ -36,6 +37,11 @@ public class GameVisualController : MonoBehaviour {
             grid.GetComponent<SpriteRenderer>().sprite = playerXSprite;
         else
             grid.GetComponent<SpriteRenderer>().sprite = playerOSprite;
+    }
+
+    public void UpdateScoreBoard() {
+        ScoreMenuDisplay scoreDisplay = gameObject.GetComponent<ScoreMenuDisplay>();
+        scoreDisplay.UpdateScoreBoard();
     }
 
     public void WinGameVisual (string winMessage) {
