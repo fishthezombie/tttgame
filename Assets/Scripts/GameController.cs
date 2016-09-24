@@ -91,7 +91,6 @@ public class GameController : MonoBehaviour {
         int gridX = (int)gridPos.x,
             gridY = (int)gridPos.y;
 
-        Debug.Log("gridX: " + gridX + " || gridY : " + gridY);
         //initialize value
         rowValue = 0;
         columnValue = 0;
@@ -105,7 +104,6 @@ public class GameController : MonoBehaviour {
                 gridSquareList[gridX][x].GetComponent<GridEvent>().getGridValue();
             rowValue = rowValue +
                 gridSquareList[x][gridY].GetComponent<GridEvent>().getGridValue();
-            Debug.Log("Row Value" + rowValue);
         }
                 //If winner found when checking row or column, no need to check diagonals
         if (columnValue == oTotal || rowValue == oTotal) {
